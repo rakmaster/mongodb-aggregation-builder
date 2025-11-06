@@ -19,7 +19,7 @@ Check out the [live demo](https://yourusername.github.io/mongo-aggregation-build
 ## Installation
 
 ```bash
-npm install mongo-aggregation-builder
+npm install @rakmaster/mongo-aggregation-builder
 ```
 
 ## Usage

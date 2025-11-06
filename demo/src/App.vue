@@ -109,7 +109,7 @@
 
           <div class="api-item">
             <h3>Installation</h3>
-            <pre class="code-block">npm install mongo-aggregation-builder</pre>
+            <pre class="code-block">npm install @rakmaster/mongo-aggregation-builder</pre>
           </div>
         </div>
       </section>
