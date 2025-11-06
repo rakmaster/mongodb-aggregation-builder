@@ -388,7 +388,8 @@ function getErrorColumn(jsonString: string, error: any): number | undefined {
     if (match && match[1]) {
       const position = parseInt(match[1])
       const lines = jsonString.substring(0, position).split('\n')
-      return lines.length > 0 ? lines[lines.length - 1].length : undefined
+      const lastLine = lines[lines.length - 1]
+      return lastLine ? lastLine.length : undefined
     }
   }
   return undefined
