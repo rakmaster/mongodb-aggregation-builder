@@ -1,0 +1,51 @@
+{
+  "name": "mongo-aggregation-builder",
+  "version": "0.1.0",
+  "description": "A Vue.js GUI component for building MongoDB aggregation pipelines, inspired by MongoDB Compass",
+  "main": "dist/mongo-aggregation-builder.umd.js",
+  "module": "dist/mongo-aggregation-builder.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/mongo-aggregation-builder.es.js",
+      "require": "./dist/mongo-aggregation-builder.umd.js"
+    },
+    "./style": "./dist/mongo-aggregation-builder.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vue-tsc --noEmit && vite build",
+    "dev": "vue-tsc --noEmit --watch",
+    "demo:dev": "cd demo && npm run dev",
+    "demo:build": "cd demo && npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mongodb",
+    "aggregation",
+    "pipeline",
+    "vue",
+    "gui",
+    "compass"
+  ],
+  "author": "Windsurf Engineering",
+  "license": "MIT",
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "mongodb": "^6.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.1",
+    "vite-plugin-dts": "^4.5.4",
+    "vue": "^3.5.23",
+    "vue-tsc": "^3.1.3"
+  }
+}
