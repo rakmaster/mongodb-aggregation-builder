@@ -2,7 +2,7 @@
   <div class="mongo-aggregation-builder">
     <div class="toolbar">
       <button @click="addStage">Add Stage</button>
-      <button @click="runPipeline" v-if="hasConnection">Run Pipeline</button>
+      <button @click="exportPipeline">Export Pipeline</button>
       <select v-model="viewMode">
         <option value="stages">Stages View</option>
         <option value="text">Text View</option>
@@ -45,35 +45,36 @@
       <strong>Error:</strong> {{ error }}
     </div>
 
-    <OutputPanel :pipeline="stages" :results="results" />
+    <OutputPanel :pipeline="stages" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import type { Pipeline, AggregationStage, ConnectionConfig, ThemeConfig } from '../types'
+import type { Pipeline, AggregationStage, ThemeConfig } from '../types'
 import StageCard from './StageCard.vue'
 import OutputPanel from './OutputPanel.vue'
 import { validateAggregationPipeline } from '../validation'
 
 interface Props {
-  connection?: ConnectionConfig
   theme?: ThemeConfig
+  initialPipeline?: Pipeline
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  connection: undefined,
   theme: () => ({})
 })
 
-const stages = ref<Pipeline>([])
-const results = ref<any[]>([])
+const emit = defineEmits<{
+  pipelineChange: [pipeline: Pipeline]
+  exportPipeline: [pipeline: Pipeline]
+}>()
+
+const stages = ref<Pipeline>(props.initialPipeline || [])
 const viewMode = ref<'stages' | 'text'>('stages')
 const error = ref<string>('')
 const pipelineValidationErrors = ref<string[]>([])
 const hasPipelineErrors = computed(() => pipelineValidationErrors.value.length > 0)
-
-const hasConnection = computed(() => !!props.connection)
 
 const pipelineJson = computed({
   get: () => JSON.stringify(stages.value, null, 2),
@@ -93,22 +94,26 @@ const pipelineJson = computed({
 
 const addStage = () => {
   stages.value.push({ $match: { status: "active" } } as AggregationStage)
+  emitPipelineChange()
 }
 
 const removeStage = (index: number) => {
   stages.value.splice(index, 1)
   validatePipeline()
+  emitPipelineChange()
 }
 
 const updateStage = (index: number, stage: AggregationStage) => {
   stages.value[index] = stage
   validatePipeline()
+  emitPipelineChange()
 }
 
 const moveStageUp = (index: number) => {
   if (index > 0) {
     [stages.value[index - 1], stages.value[index]] = [stages.value[index]!, stages.value[index - 1]!]
     validatePipeline()
+    emitPipelineChange()
   }
 }
 
@@ -116,11 +121,13 @@ const moveStageDown = (index: number) => {
   if (index < stages.value.length - 1) {
     [stages.value[index], stages.value[index + 1]] = [stages.value[index + 1]!, stages.value[index]!]
     validatePipeline()
+    emitPipelineChange()
   }
 }
 
 const updatePipelineFromJson = () => {
   validatePipeline()
+  emitPipelineChange()
 }
 
 const validatePipeline = () => {
@@ -138,35 +145,12 @@ const validatePipeline = () => {
   }
 }
 
-const runPipeline = async () => {
-  if (!props.connection) return
+const exportPipeline = () => {
+  emit('exportPipeline', stages.value)
+}
 
-  error.value = ''
-  pipelineValidationErrors.value = []
-
-  // Validate pipeline before running
-  const validation = validateAggregationPipeline(pipelineJson.value)
-  if (!validation.isValid) {
-    pipelineValidationErrors.value = validation.errors.map(error => error.message)
-    return
-  }
-
-  try {
-    const { MongoClient } = await import('mongodb')
-    const client = new MongoClient(props.connection.uri)
-    await client.connect()
-
-    const db = client.db(props.connection.database)
-    const collection = db.collection(props.connection.collection)
-
-    const pipelineResult = await collection.aggregate(stages.value).toArray()
-    results.value = pipelineResult
-
-    await client.close()
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Unknown error'
-    console.error('Error running pipeline:', err)
-  }
+const emitPipelineChange = () => {
+  emit('pipelineChange', stages.value)
 }
 
 watch(() => props.theme, (newTheme) => {
@@ -179,9 +163,9 @@ watch(() => props.theme, (newTheme) => {
 
 <style scoped>
 .mongo-aggregation-builder {
-  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-  color: var(--text-color, #333);
-  background: var(--bg-color, #fff);
+  font-family: var(--font-family, var(--v-theme-font), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  color: var(--text-color, var(--v-theme-on-surface));
+  background: var(--bg-color, var(--v-theme-surface));
 }
 
 .toolbar {
@@ -192,8 +176,8 @@ watch(() => props.theme, (newTheme) => {
 }
 
 .toolbar button {
-  background: var(--button-bg, #007bff);
-  color: var(--button-text, white);
+  background: var(--button-bg, var(--v-theme-primary));
+  color: var(--button-text, var(--v-theme-on-primary));
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -201,12 +185,12 @@ watch(() => props.theme, (newTheme) => {
 }
 
 .toolbar button:hover {
-  background: var(--button-hover-bg, #0056b3);
+  background: var(--button-hover-bg, var(--v-theme-primary-variant));
 }
 
 .toolbar select {
   padding: 0.5rem;
-  border: 1px solid var(--border-color, #ccc);
+  border: 1px solid var(--border-color, var(--v-theme-outline));
   border-radius: 4px;
 }
 
@@ -219,16 +203,16 @@ watch(() => props.theme, (newTheme) => {
 .pipeline-textarea {
   width: 100%;
   height: 400px;
-  font-family: var(--mono-font, monospace);
+  font-family: var(--mono-font, var(--v-theme-font), monospace);
   padding: 1rem;
-  border: 1px solid var(--border-color, #ccc);
+  border: 1px solid var(--border-color, var(--v-theme-outline));
   border-radius: 4px;
-  background: var(--input-bg, white);
-  color: var(--text-color, #333);
+  background: var(--input-bg, var(--v-theme-surface-variant));
+  color: var(--text-color, var(--v-theme-on-surface));
 }
 
 .pipeline-textarea.has-errors {
-  border-color: #dc3545;
+  border-color: var(--error-color, var(--v-theme-error));
 }
 
 .validation-errors {
@@ -236,9 +220,9 @@ watch(() => props.theme, (newTheme) => {
 }
 
 .error-message {
-  color: var(--error-color, #dc3545);
-  background: var(--error-bg, #f8d7da);
-  border: 1px solid var(--error-border, #f5c6cb);
+  color: var(--error-color, var(--v-theme-error));
+  background: var(--error-bg, var(--v-theme-error-container));
+  border: 1px solid var(--error-border, var(--v-theme-error));
   padding: 0.75rem;
   border-radius: 4px;
   margin: 1rem 0;

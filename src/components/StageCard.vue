@@ -149,10 +149,10 @@ watch(() => props.stage, (newStage) => {
 
 <style scoped>
 .stage-card {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color, var(--v-theme-outline));
   border-radius: 8px;
   padding: 1rem;
-  background: white;
+  background: var(--bg-color, var(--v-theme-surface));
 }
 
 .stage-header {
@@ -164,6 +164,7 @@ watch(() => props.stage, (newStage) => {
 
 .stage-number {
   font-weight: bold;
+  color: var(--text-color, var(--v-theme-on-surface));
 }
 
 .stage-actions {
@@ -175,14 +176,16 @@ watch(() => props.stage, (newStage) => {
 .stage-textarea {
   width: 100%;
   height: 200px;
-  font-family: monospace;
+  font-family: var(--mono-font, var(--v-theme-font), monospace);
   padding: 0.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color, var(--v-theme-outline));
   border-radius: 4px;
+  background: var(--input-bg, var(--v-theme-surface-variant));
+  color: var(--text-color, var(--v-theme-on-surface));
 }
 
 .stage-textarea.has-errors {
-  border-color: #dc3545;
+  border-color: var(--error-color, var(--v-theme-error));
 }
 
 .validation-errors {
@@ -190,18 +193,18 @@ watch(() => props.stage, (newStage) => {
 }
 
 .error-message {
-  color: #dc3545;
+  color: var(--error-color, var(--v-theme-error));
   font-size: 0.875rem;
   margin-bottom: 0.25rem;
   padding: 0.25rem;
-  background: #f8d7da;
+  background: var(--error-bg, var(--v-theme-error-container));
   border-radius: 3px;
-  border-left: 3px solid #dc3545;
+  border-left: 3px solid var(--error-color, var(--v-theme-error));
 }
 
 .stage-preview {
   margin-top: 1rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color, var(--v-theme-outline));
   padding-top: 1rem;
 }
 
@@ -211,10 +214,11 @@ watch(() => props.stage, (newStage) => {
 }
 
 .preview-documents pre {
-  background: #f5f5f5;
+  background: var(--input-bg, var(--v-theme-surface-variant));
   padding: 0.5rem;
   margin: 0.25rem 0;
   border-radius: 4px;
   font-size: 0.8rem;
+  color: var(--text-color, var(--v-theme-on-surface));
 }
 </style>

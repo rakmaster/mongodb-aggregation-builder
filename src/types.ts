@@ -316,18 +316,11 @@ export type AggregationStage =
 
 export type Pipeline = AggregationStage[];
 
-// Props types
-export interface ConnectionConfig {
-  uri: string
-  database: string
-  collection: string
-}
-
 export interface ThemeConfig {
   [key: string]: string
 }
 
 export interface MongoAggregationBuilderProps {
-  connection?: ConnectionConfig
   theme?: ThemeConfig
+  initialPipeline?: Pipeline
 }

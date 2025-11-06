@@ -15,29 +15,9 @@
       <section id="demo" class="demo-section">
         <div class="container">
           <h2>Interactive Demo</h2>
-          <p>Try building an aggregation pipeline below. The component will generate JSON and MongoDB query outputs in real-time.</p>
+          <p>Try building an aggregation pipeline below. The component generates JSON and MongoDB query outputs in real-time.</p>
 
           <div class="demo-controls">
-            <div class="control-group">
-              <label for="connection-toggle">Enable MongoDB Connection:</label>
-              <input id="connection-toggle" v-model="enableConnection" type="checkbox">
-            </div>
-
-            <div v-if="enableConnection" class="connection-config">
-              <div class="control-group">
-                <label for="uri">MongoDB URI:</label>
-                <input id="uri" v-model="connection.uri" type="text" placeholder="mongodb://localhost:27017">
-              </div>
-              <div class="control-group">
-                <label for="database">Database:</label>
-                <input id="database" v-model="connection.database" type="text" placeholder="myapp">
-              </div>
-              <div class="control-group">
-                <label for="collection">Collection:</label>
-                <input id="collection" v-model="connection.collection" type="text" placeholder="users">
-              </div>
-            </div>
-
             <div class="theme-selector">
               <label>Theme:</label>
               <select v-model="selectedTheme">
@@ -50,8 +30,9 @@
 
           <div class="demo-builder">
             <MongoAggregationBuilder
-              :connection="enableConnection ? connection : undefined"
               :theme="currentTheme"
+              @pipeline-change="onPipelineChange"
+              @export-pipeline="onExportPipeline"
             />
           </div>
         </div>
@@ -74,28 +55,44 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><code>connection</code></td>
-                  <td><code>ConnectionConfig</code></td>
-                  <td><code>undefined</code></td>
-                  <td>MongoDB connection details for running pipelines</td>
-                </tr>
-                <tr>
                   <td><code>theme</code></td>
                   <td><code>ThemeConfig</code></td>
                   <td><code>{}</code></td>
                   <td>CSS variables for theming</td>
+                </tr>
+                <tr>
+                  <td><code>initialPipeline</code></td>
+                  <td><code>Pipeline</code></td>
+                  <td><code>[]</code></td>
+                  <td>Initial aggregation pipeline to load</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           <div class="api-item">
-            <h3>ConnectionConfig</h3>
-            <pre class="code-block">interface ConnectionConfig {
-  uri: string      // MongoDB connection URI
-  database: string // Database name
-  collection: string // Collection name
-}</pre>
+            <h3>Events</h3>
+            <table class="api-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Parameters</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>pipelineChange</code></td>
+                  <td><code>pipeline: Pipeline</code></td>
+                  <td>Emitted when the pipeline changes</td>
+                </tr>
+                <tr>
+                  <td><code>exportPipeline</code></td>
+                  <td><code>pipeline: Pipeline</code></td>
+                  <td>Emitted when export button is clicked</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <div class="api-item">
@@ -120,13 +117,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import MongoAggregationBuilder from '../../src/components/MongoAggregationBuilder.vue'
-
-const enableConnection = ref(false)
-const connection = ref({
-  uri: 'mongodb://localhost:27017',
-  database: 'myapp',
-  collection: 'users'
-})
 
 const selectedTheme = ref('light')
 
@@ -167,6 +157,21 @@ const themes = {
 }
 
 const currentTheme = computed(() => themes[selectedTheme.value])
+
+const onPipelineChange = (pipeline) => {
+  console.log('Pipeline changed:', pipeline)
+}
+
+const onExportPipeline = (pipeline) => {
+  console.log('Export pipeline:', pipeline)
+  // Copy to clipboard or download as file
+  const json = JSON.stringify(pipeline, null, 2)
+  navigator.clipboard.writeText(json).then(() => {
+    alert('Pipeline copied to clipboard!')
+  }).catch(err => {
+    console.error('Failed to copy pipeline:', err)
+  })
+}
 
 const allStages = [
   '$addFields', '$bucket', '$bucketAuto', '$changeStream', '$changeStreamSplitLargeEvent',
