@@ -1,5 +1,5 @@
 {
-  "name": "mongo-aggregation-builder",
+  "name": "@rakmaster/mongo-aggregation-builder",
   "version": "0.1.0",
   "description": "A Vue.js GUI component for building MongoDB aggregation pipelines, inspired by MongoDB Compass",
   "main": "dist/mongo-aggregation-builder.umd.js",
