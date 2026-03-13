@@ -1,54 +1,44 @@
-# Mongo Aggregation Builder
+# V-MongoDB Aggregation Builder
 
-A Vue.js GUI component for building MongoDB aggregation pipelines, inspired by the interface in MongoDB Compass. This is a **web-compatible** package that runs entirely in the browser.
-
-## Demo
-
-Check out the [live demo](https://yourusername.github.io/mongo-aggregation-builder/) to see the component in action.
+A Vuetify-based GUI component for building MongoDB aggregation pipelines, inspired by MongoDB Compass. This component integrates seamlessly with Vuetify applications.
 
 ## Features
 
-- **Visual Pipeline Builder**: Drag-and-drop interface for creating aggregation stages, inspired by MongoDB Compass
-- **Complete Stage Support**: All 42 MongoDB aggregation pipeline stages including $match, $group, $lookup, $facet, $search, and more
-- **Multiple Views**: Switch between visual Stages View and raw JSON Text View for maximum flexibility
-- **Real-time Output**: Generate JSON pipeline and MongoDB query formats instantly as you build
-- **Browser Compatible**: Runs entirely in the browser without Node.js dependencies
-- **Fully Themeable**: Customize appearance with CSS variables to match your application's design
+- **Visual Pipeline Builder**: Drag-and-drop interface for creating aggregation stages
+- **Complete Stage Support**: All 42 MongoDB aggregation pipeline stages
+- **Multiple Views**: Switch between visual Stages View and raw JSON Text View
+- **Real-time Output**: Generate JSON pipeline and MongoDB query formats instantly
+- **Vuetify Integration**: Fully integrated with Vuetify's theming and component system
 - **TypeScript Support**: Full TypeScript definitions for all stages and configurations
-- **Event-Driven**: Listen to pipeline changes and export events for integration
 
 ## Installation
 
 ```bash
-npm install @rakmaster/mongo-aggregation-builder
+npm install @rakmaster/v-mdb-aggregation vuetify
 ```
 
 ## Usage
 
 ```vue
 <template>
-  <MongoAggregationBuilder
-    :theme="customTheme"
-    :initial-pipeline="existingPipeline"
-    @pipeline-change="onPipelineChange"
-    @export-pipeline="onExportPipeline"
-  />
+  <v-app>
+    <v-container>
+      <v-mongo-aggregation-builder
+        :initial-pipeline="existingPipeline"
+        @pipeline-change="onPipelineChange"
+        @export-pipeline="onExportPipeline"
+      />
+    </v-container>
+  </v-app>
 </template>
 
 <script setup>
-import { MongoAggregationBuilder } from '@rakmaster/mongo-aggregation-builder'
-import '@rakmaster/mongo-aggregation-builder/style'
+import { VMongoAggregationBuilder } from '@rakmaster/v-mdb-aggregation'
 
 const existingPipeline = [
   { "$match": { "status": "active" } },
   { "$group": { "_id": "$category", "count": { "$sum": 1 } } }
 ]
-
-const customTheme = {
-  'bg-color': '#1a1a1a',
-  'text-color': '#ffffff',
-  'button-bg': '#4a9eff'
-}
 
 const onPipelineChange = (pipeline) => {
   console.log('Pipeline updated:', pipeline)
@@ -66,7 +56,6 @@ const onExportPipeline = (pipeline) => {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `theme` | `ThemeConfig` | `{}` | CSS variables for theming |
 | `initialPipeline` | `Pipeline` | `[]` | Initial aggregation pipeline to load |
 
 ## Events
@@ -76,7 +65,7 @@ const onExportPipeline = (pipeline) => {
 | `pipelineChange` | `pipeline: Pipeline` | Emitted when the pipeline changes |
 | `exportPipeline` | `pipeline: Pipeline` | Emitted when export button is clicked |
 
-### Supported Aggregation Stages
+## Supported Aggregation Stages
 
 The component supports all 42 MongoDB aggregation pipeline stages:
 
@@ -95,9 +84,6 @@ The component supports all 42 MongoDB aggregation pipeline stages:
 **Grouping & Bucketing:**
 - `$bucket`, `$bucketAuto`, `$sortByCount`, `$facet`
 
-**Geospatial:**
-- `$geoNear`
-
 **Search:**
 - `$search`, `$searchMeta`
 
@@ -106,70 +92,6 @@ The component supports all 42 MongoDB aggregation pipeline stages:
 
 **Advanced:**
 - `$sample`, `$redact`, `$collStats`, `$indexStats`, `$currentOp`, `$listSessions`, `$listLocalSessions`, `$planCacheStats`, `$changeStream`, `$changeStreamSplitLargeEvent`, `$densify`, `$fill`, `$setWindowFields`, `$shardedDataDistribution`, `$documents`
-
-### ThemeConfig
-
-```typescript
-interface ThemeConfig {
-  [key: string]: string // CSS variable names and values
-}
-```
-
-## Views
-
-### Stages View
-Visual editor with cards for each pipeline stage. Add, edit, delete, and reorder stages.
-
-### Text View
-Direct JSON editing of the entire pipeline array.
-
-## Output Formats
-
-### JSON Pipeline
-```json
-[
-  { "$match": { "status": "active" } },
-  { "$group": { "_id": "$category", "count": { "$sum": 1 } } }
-]
-```
-
-### MongoDB Query
-```javascript
-db.collection.aggregate([
-  { "$match": { "status": "active" } },
-  { "$group": { "_id": "$category", "count": { "$sum": 1 } } }
-])
-```
-
-## Theming
-
-Customize the appearance using CSS variables:
-
-```css
-:root {
-  --bg-color: #ffffff;
-  --text-color: #333333;
-  --button-bg: #007bff;
-  --button-hover-bg: #0056b3;
-  --border-color: #cccccc;
-  --input-bg: #ffffff;
-  --error-color: #dc3545;
-}
-```
-
-### Vuetify Integration
-
-The component automatically adapts to Vuetify themes when used within a Vuetify application. It will use Vuetify's CSS custom properties as fallback values, so the component will match your Vuetify theme out of the box.
-
-Supported Vuetify theme variables:
-- `--v-theme-primary` - Primary color
-- `--v-theme-surface` - Background color
-- `--v-theme-on-surface` - Text color on surfaces
-- `--v-theme-outline` - Border color
-- `--v-theme-surface-variant` - Input background
-- `--v-theme-error` - Error color
-- `--v-theme-error-container` - Error background
-- `--v-theme-font` - Font family
 
 ## Development
 

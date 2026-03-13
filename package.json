@@ -1,62 +1,65 @@
 {
-  "name": "@rakmaster/mongo-aggregation-builder",
-  "version": "0.2.1",
-  "description": "A Vue.js GUI component for building MongoDB aggregation pipelines, inspired by MongoDB Compass",
+  "name": "@cgshealth/v-mdb-aggregation",
+  "version": "0.1.9",
+  "description": "A Vuetify-based GUI component for building MongoDB aggregation pipelines, inspired by MongoDB Compass",
   "keywords": [
     "mongodb",
     "aggregation",
     "pipeline",
     "vue",
+    "vuetify",
     "gui",
     "compass"
   ],
-  "homepage": "https://github.com/rakmaster/mongodb-aggregation-builder#readme",
+  "homepage": "https://github.com/rakmaster/v-mdb-aggregation#readme",
   "bugs": {
-    "url": "https://github.com/rakmaster/mongodb-aggregation-builder/issues"
+    "url": "https://github.com/rakmaster/v-mdb-aggregation/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rakmaster/mongodb-aggregation-builder.git"
+    "url": ""
   },
   "license": "MIT",
-  "author": "Windsurf Engineering",
-  "type": "commonjs",
+  "author": "Logan",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/mongo-aggregation-builder.es.js",
-      "require": "./dist/mongo-aggregation-builder.umd.js"
+      "import": "./dist/v-mdb-aggregation.es.js",
+      "require": "./dist/v-mdb-aggregation.umd.js"
     },
-    "./style": "./dist/mongo-aggregation-builder.css"
+    "./style": "./dist/v-mdb-aggregation.css"
   },
-  "main": "dist/mongo-aggregation-builder.umd.js",
+  "main": "dist/v-mdb-aggregation.umd.js",
   "types": "dist/index.d.ts",
-  "directories": {
-    "doc": "docs"
-  },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "vue-tsc --noEmit && vite build",
     "dev": "vue-tsc --noEmit --watch",
-    "demo:dev": "cd demo && npm run dev",
-    "demo:build": "cd demo && npm run build",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "prismjs": "^1.30.0"
   },
   "devDependencies": {
+    "@types/prismjs": "^1.26.5",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.8.1",
     "typescript": "^5.9.3",
     "vite": "^7.2.1",
     "vite-plugin-dts": "^4.5.4",
     "vue": "^3.5.23",
-    "vue-tsc": "^3.1.3"
+    "vue-tsc": "^3.1.3",
+    "vuetify": "^4.0.0"
   },
   "peerDependencies": {
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "vuetify": "^4.0.0"
   },
-  "module": "dist/mongo-aggregation-builder.es.js"
+  "publishConfig": {
+    "registry": "https://npm.hht.llc"
+  },
+  "module": "dist/v-mdb-aggregation.es.js"
 }

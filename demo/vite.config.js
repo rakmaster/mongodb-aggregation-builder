@@ -3,8 +3,8 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
-  base: './',
+  base: '/v-mdb-aggregation/',
   build: {
-    outDir: '../docs/demo'
+    outDir: '../docs'
   }
 })

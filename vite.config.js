@@ -8,23 +8,22 @@ export default defineConfig({
     vue(),
     dts({
       insertTypesEntry: true,
-    })
+    }),
   ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'MongoAggregationBuilder',
-      formats: ['es', 'umd'],
-      fileName: (format) => `mongo-aggregation-builder.${format}.js`
+      name: 'VMongoAggregationBuilder',
+      fileName: (format) => `v-mdb-aggregation.${format}.js`,
     },
     rollupOptions: {
-      external: ['vue', 'mongodb'],
+      external: ['vue', 'vuetify', 'vuetify/components', 'vuetify/directives'],
       output: {
         globals: {
           vue: 'Vue',
-          mongodb: 'mongodb'
-        }
-      }
-    }
-  }
+          vuetify: 'Vuetify',
+        },
+      },
+    },
+  },
 })
