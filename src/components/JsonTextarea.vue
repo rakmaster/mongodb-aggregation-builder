@@ -85,7 +85,10 @@ const handleKeydown = (event: KeyboardEvent) => {
   -webkit-user-modify: read-write-plaintext-only;
   -moz-user-modify: read-write-plaintext-only;
   user-modify: read-write-plaintext-only;
-  /* Make sure Prism styles are visible */
+  /* Light theme defaults */
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
   color: rgba(0, 0, 0, 0.87) !important;
 }
 
@@ -103,26 +106,26 @@ const handleKeydown = (event: KeyboardEvent) => {
   box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
 }
 
-/* Dark theme support */
-@media (prefers-color-scheme: dark) {
-  .v-mab-syntax-textarea {
-    caret-color: rgba(255, 255, 255, 0.87);
-    color: rgba(255, 255, 255, 0.87) !important;
-  }
+/* Dark theme support - using Vuetify theme classes */
+.v-theme--dark .v-mab-syntax-textarea {
+  background-color: rgb(var(--v-theme-surface));
+  border-color: rgba(255, 255, 255, 0.12);
+  caret-color: rgba(255, 255, 255, 0.87);
+  color: rgba(255, 255, 255, 0.87) !important;
+}
 
-  .v-mab-syntax-textarea:focus {
-    border-color: #90caf9;
-    box-shadow: 0 0 0 2px rgba(144, 202, 249, 0.2);
-  }
+.v-theme--dark .v-mab-syntax-textarea:focus {
+  border-color: #90caf9;
+  box-shadow: 0 0 0 2px rgba(144, 202, 249, 0.2);
+}
 
-  .v-mab-syntax-textarea.text-error {
-    border-color: #f48fb1;
-  }
+.v-theme--dark .v-mab-syntax-textarea.text-error {
+  border-color: #f48fb1;
+}
 
-  .v-mab-syntax-textarea.text-error:focus {
-    border-color: #f48fb1;
-    box-shadow: 0 0 0 2px rgba(244, 143, 177, 0.2);
-  }
+.v-theme--dark .v-mab-syntax-textarea.text-error:focus {
+  border-color: #f48fb1;
+  box-shadow: 0 0 0 2px rgba(244, 143, 177, 0.2);
 }
 
 /* Prism syntax highlighting styles - make sure they're applied to our contenteditable */
@@ -184,9 +187,7 @@ const handleKeydown = (event: KeyboardEvent) => {
   caret-color: rgba(0, 0, 0, 0.87);
 }
 
-@media (prefers-color-scheme: dark) {
-  .v-mab-syntax-textarea[contenteditable]:focus {
-    caret-color: rgba(255, 255, 255, 0.87);
-  }
+.v-theme--dark .v-mab-syntax-textarea[contenteditable]:focus {
+  caret-color: rgba(255, 255, 255, 0.87);
 }
 </style>

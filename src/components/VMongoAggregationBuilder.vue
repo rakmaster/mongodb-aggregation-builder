@@ -111,25 +111,25 @@ import JsonTextarea from './JsonTextarea.vue'
 import { validateAggregationPipeline } from '../validation'
 
 interface Props {
-  initialPipeline?: Pipeline
+  modelValue?: Pipeline
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  initialPipeline: () => []
+  modelValue: () => []
 })
 
 const emit = defineEmits<{
-  pipelineChange: [pipeline: Pipeline]
+  'update:modelValue': [pipeline: Pipeline]
   exportPipeline: [pipeline: Pipeline]
 }>()
 
-const stages = ref<Pipeline>(props.initialPipeline || [])
+const stages = ref<Pipeline>(props.modelValue || [])
 const viewMode = ref<'stages' | 'text'>('stages')
 const error = ref<string>('')
 const pipelineValidationErrors = ref<string[]>([])
 const hasPipelineErrors = computed(() => pipelineValidationErrors.value.length > 0)
-const expandedPanels = ref<number[]>(props.initialPipeline ? props.initialPipeline.map((_, index) => index) : [])
-const textAreaContent = ref<string>(JSON.stringify(props.initialPipeline || [], null, 2))
+const expandedPanels = ref<number[]>(props.modelValue ? props.modelValue.map((_, index) => index) : [])
+const textAreaContent = ref<string>(JSON.stringify(props.modelValue || [], null, 2))
 
 const pipelineJson = computed(() => JSON.stringify(stages.value, null, 2))
 
@@ -161,7 +161,7 @@ const exportPipeline = () => {
 }
 
 const emitPipelineChange = () => {
-  emit('pipelineChange', stages.value)
+  emit('update:modelValue', stages.value)
 }
 
 const addStage = () => {
@@ -277,10 +277,13 @@ const updatePipelineFromText = (text: string) => {
   try {
     const parsed = JSON.parse(text)
     if (Array.isArray(parsed)) {
+      console.log('Updating pipeline from text:', parsed)
       stages.value = parsed
       emitPipelineChange()
+      console.log('Pipeline updated, stages:', stages.value)
     }
   } catch (e) {
+    console.warn('Failed to parse pipeline JSON:', e)
     // Keep existing stages if JSON is invalid
   }
 }
