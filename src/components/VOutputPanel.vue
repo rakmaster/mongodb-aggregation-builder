@@ -15,13 +15,13 @@
           <v-tab value="query">Query</v-tab>
         </v-tabs>
 
-        <v-window v-model="activeTab" class="mt-4">
+        <v-window v-model="activeTab" class="mt-4 output-window">
           <v-window-item value="json">
-            <pre>{{ pipelineJson }}</pre>
+            <pre class="output-pre">{{ pipelineJson }}</pre>
           </v-window-item>
 
           <v-window-item value="query">
-              <pre>{{ mongodbQuery }}</pre>
+              <pre class="output-pre">{{ mongodbQuery }}</pre>
           </v-window-item>
         </v-window>
       </v-card-text>
@@ -56,7 +56,23 @@ const mongodbQuery = computed(() => {
 </script>
 
 <style scoped>
-.v-output-panel {
-  /* Vuetify handles the styling */
+.output-window {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.output-pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 550px;
+  overflow-y: auto;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.v-theme--dark .output-pre {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 </style>

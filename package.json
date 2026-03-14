@@ -1,6 +1,6 @@
 {
   "name": "@cgshealth/v-mdb-aggregation",
-  "version": "0.1.13",
+  "version": "0.1.16",
   "description": "A Vuetify-based GUI component for building MongoDB aggregation pipelines, inspired by MongoDB Compass",
   "keywords": [
     "mongodb",

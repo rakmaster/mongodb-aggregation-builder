@@ -133,17 +133,53 @@ const textAreaContent = ref<string>(JSON.stringify(props.modelValue || [], null,
 
 const pipelineJson = computed(() => JSON.stringify(stages.value, null, 2))
 
+// Flag to prevent circular updates
+let isUpdating = false
+
 // Watch for stage changes to sync textarea content
 watch(stages, () => {
-  if (viewMode.value === 'text') {
+  if (!isUpdating) {
+    isUpdating = true
     textAreaContent.value = pipelineJson.value
+    emitPipelineChange()
+    isUpdating = false
   }
 }, { deep: true })
 
-// Watch for view mode changes to sync textarea content when switching to text view
-watch(viewMode, (newMode) => {
+// Watch for text area changes and update stages
+watch(textAreaContent, (newValue) => {
+  if (!isUpdating && viewMode.value === 'text') {
+    isUpdating = true
+    validatePipelineFromText(newValue)
+    try {
+      const parsed = JSON.parse(newValue)
+      if (Array.isArray(parsed)) {
+        stages.value = parsed
+        // emitPipelineChange is called by the stages watcher
+      }
+    } catch (e) {
+      // Invalid JSON, don't update stages
+    }
+    isUpdating = false
+  }
+})
+
+// When switching to text view, sync from stages
+// When switching to stages view, ensure stages are up to date from text
+watch(viewMode, (newMode, oldMode) => {
   if (newMode === 'text') {
+    // Switching to text view - sync from stages
     textAreaContent.value = pipelineJson.value
+  } else if (oldMode === 'text') {
+    // Switching from text to stages - ensure stages are updated from text
+    try {
+      const parsed = JSON.parse(textAreaContent.value)
+      if (Array.isArray(parsed)) {
+        stages.value = parsed
+      }
+    } catch (e) {
+      // Invalid JSON, keep existing stages
+    }
   }
 })
 
